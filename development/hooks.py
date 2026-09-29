@@ -246,4 +246,32 @@ app_license = "mit"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
-
+fixtures = [
+    {
+        "dt": "DocType",
+        "filters": [
+            ["name", "in", [
+                "New And Existing Product Analysis Module",
+                "Container Details",
+                "CRM Team",
+                "Item - Wise Production Capacity",
+                "CRM Organization Product Analysis",
+                "Section Wise Production Capacity",
+                "CRM Prospect Item Conversion Status",
+                "Product Group",
+                "Customer Type",
+                "Influence Chart",
+                "Lead Stakeholders",
+                "Customer Addition Request",
+            ]]
+        ],
+    },
+    # only include these two if Step 1 showed actual scripts:
+    {
+        "dt": "Client Script"        
+    },
+    {
+        "dt": "Server Script"
+        
+    },
+]
