@@ -247,6 +247,33 @@ app_license = "mit"
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
 fixtures = [
+        {
+        "dt": "Property Setter",
+        "filters": [
+            ["doc_type", "in", ["CRM Lead", "CRM Deal", "CRM Deal Status", "CRM Organization"]]
+        ]
+    },
+    {
+        "dt": "Custom Field",
+        "filters": [
+            ["dt", "in", ["CRM Lead", "CRM Deal", "CRM Deal Status", "CRM Organization"]]
+        ]
+    },
+	# ROLE MASTER
+    # --------------------
+    {
+        "dt": "Role",
+        "filters": [
+            ["name", "not in", ["Administrator", "Guest", "All"]]
+        ]
+    },
+
+    # --------------------
+    # ROLE PERMISSIONS (DocType Permission)
+    # --------------------
+    {
+        "dt": "Custom DocPerm"
+    },
     {
         "dt": "DocType",
         "filters": [
