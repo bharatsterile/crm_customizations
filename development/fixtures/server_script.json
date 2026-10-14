@@ -9,13 +9,13 @@
   "doctype_event": "After Insert",
   "enable_rate_limit": 0,
   "event_frequency": "All",
-  "modified": "2026-07-27 14:50:32.752477",
+  "modified": "2026-10-12 12:43:22.314306",
   "module": "FCRM",
   "name": "CRM Organization to ERPnext Prospect",
   "rate_limit_count": 5,
   "rate_limit_seconds": 86400,
   "reference_doctype": "CRM Organization",
-  "script": "payload = {\r\n    \"crm_id\": doc.name,\r\n    \"organization_name\": doc.organization_name,\r\n    \"company\": \"BHARAT STERILE PRIVATE LIMITED\",\r\n    \"website\": doc.website or \"\",\r\n    \"phone\": doc.phone or \"\",\r\n    \"email\": doc.email or \"\"\r\n}\r\n\r\nheaders = {\r\n    \"Authorization\": \"token d0e9b6e8bda15c3:ce01fce9bbf5ab7\"\r\n}\r\n\r\nresponse = frappe.make_post_request(\r\n    \"http://82.29.165.248:8003/api/method/sync_prospect\",\r\n    data=payload,\r\n    headers=headers\r\n)",
+  "script": "payload = {\r\n    \"crm_id\": doc.name,\r\n    \"organization_name\": doc.organization_name,\r\n    \"company\": \"BHARAT STERILE PRIVATE LIMITED\",\r\n    \"website\": doc.website or \"\",\r\n    \"phone\": doc.phone or \"\",\r\n    \"email\": doc.email or \"\"\r\n}\r\n\r\n# headers = {\r\n#     \"Authorization\": \"token d0e9b6e8bda15c3:ce01fce9bbf5ab7\"\r\n# }\r\n\r\n# response = frappe.make_post_request(\r\n#     \"http://82.29.165.248:8003/api/method/sync_prospect\",\r\n#     data=payload,\r\n#     headers=headers\r\n# )\r\n\r\n# Load the config record (a normal doctype with a record named \"1\")\r\nconfig = frappe.get_doc(\"Container Details\", \"1\")\r\n\r\napi_key = config.api_key\r\napi_secret = config.api_secret  # use this if the field type is Password\r\nbase_url = (config.erp_next_url or \"\").rstrip(\"/\")\r\n\r\nif not (api_key and api_secret and base_url):\r\n    frappe.throw(\"Container Details is missing the ERP URL, API key or API secret\")\r\n\r\nheaders = {\r\n    \"Authorization\": f\"token {api_key}:{api_secret}\"\r\n}\r\n\r\nfrappe.make_post_request(\r\n    f\"{base_url}/api/method/sync_prospect\",\r\n    data=payload,\r\n    headers=headers\r\n)\r\n",
   "script_type": "DocType Event"
  },
  {
@@ -28,13 +28,13 @@
   "doctype_event": "After Save",
   "enable_rate_limit": 0,
   "event_frequency": "All",
-  "modified": "2026-09-16 13:40:20.725881",
+  "modified": "2026-10-12 12:42:50.341944",
   "module": "FCRM",
   "name": "CRM Deal to ERP Next Opportunity",
   "rate_limit_count": 5,
   "rate_limit_seconds": 86400,
   "reference_doctype": "CRM Deal",
-  "script": "\r\nitems = []\r\n\r\n# for d in doc.products:\r\n    # items.append({\r\n    #     \"item_code\": d.product_code,\r\n    #     \"qty\": d.quantity or 1\r\n    # })\r\n\r\npayload = {\r\n    \"crm_deal_id\": doc.name,\r\n    \"organization_id\": doc.organization,\r\n    \"deal_name\": doc.title,\r\n    \"amount\": doc.deal_value,\r\n    \"expected_closing\": doc.expected_closure_date,\r\n    \"probability\": doc.probability\r\n}\r\n\r\n# i = 1\r\n# for d in doc.products:\r\n#     payload[f\"item_code_{i}\"] = d.product_code\r\n#     payload[f\"qty_{i}\"] = d.quantity or 1\r\n#     i += 1\r\n    \r\n    \r\nif not doc.products:\r\n    payload[\"item_code_1\"] = \"TEST-LEAD-ITEM\"  # replace with an actual valid item code in your ERPNext instance\r\n    payload[\"qty_1\"] = 1\r\nelse:\r\n    i =1;\r\n    for d in doc.products:\r\n        payload[f\"item_code_{i}\"] = d.product_code\r\n        payload[f\"qty_{i}\"] = d.quantity or 1\r\n        i += 1\r\n\r\nheaders = {\r\n    \"Authorization\": \"token d0e9b6e8bda15c3:ce01fce9bbf5ab7\"\r\n}\r\n\r\nfrappe.make_post_request(\r\n    \"http://82.29.165.248:8003/api/method/sync_opportunity\",\r\n    data=payload,\r\n    headers=headers\r\n)\r\n\r\n",
+  "script": "\r\nitems = []\r\n\r\n# for d in doc.products:\r\n    # items.append({\r\n    #     \"item_code\": d.product_code,\r\n    #     \"qty\": d.quantity or 1\r\n    # })\r\n\r\npayload = {\r\n    \"crm_deal_id\": doc.name,\r\n    \"organization_id\": doc.organization,\r\n    \"deal_name\": doc.title,\r\n    \"amount\": doc.deal_value,\r\n    \"expected_closing\": doc.expected_closure_date,\r\n    \"probability\": doc.probability\r\n}\r\n\r\n# i = 1\r\n# for d in doc.products:\r\n#     payload[f\"item_code_{i}\"] = d.product_code\r\n#     payload[f\"qty_{i}\"] = d.quantity or 1\r\n#     i += 1\r\n    \r\n    \r\nif not doc.products:\r\n    payload[\"item_code_1\"] = \"TEST-LEAD-ITEM\"  # replace with an actual valid item code in your ERPNext instance\r\n    payload[\"qty_1\"] = 1\r\nelse:\r\n    i =1;\r\n    for d in doc.products:\r\n        payload[f\"item_code_{i}\"] = d.product_code\r\n        payload[f\"qty_{i}\"] = d.quantity or 1\r\n        i += 1\r\n\r\n# headers = {\r\n#     \"Authorization\": \"token d0e9b6e8bda15c3:ce01fce9bbf5ab7\"\r\n# }\r\n\r\n# frappe.make_post_request(\r\n#     \"http://82.29.165.248:8003/api/method/sync_opportunity\",\r\n#     data=payload,\r\n#     headers=headers\r\n# )\r\n\r\n# Load the config record (a normal doctype with a record named \"1\")\r\nconfig = frappe.get_doc(\"Container Details\", \"1\")\r\n\r\napi_key = config.api_key\r\napi_secret = config.api_secret  # use this if the field type is Password\r\nbase_url = (config.erp_next_url or \"\").rstrip(\"/\")\r\n\r\nif not (api_key and api_secret and base_url):\r\n    frappe.throw(\"Container Details is missing the ERP URL, API key or API secret\")\r\n\r\nheaders = {\r\n    \"Authorization\": f\"token {api_key}:{api_secret}\"\r\n}\r\n\r\nfrappe.make_post_request(\r\n    f\"{base_url}/api/method/sync_opportunity\",\r\n    data=payload,\r\n    headers=headers\r\n)\r\n\r\n",
   "script_type": "DocType Event"
  },
  {
